@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { ThemeContext } from "../../context/ThemeContext.jsx";
 import "./Dashboard.css";
+import StatsChart from "../charts/StatsChart";
 
 const Dashboard = () => {
   const [stats, setStats] = useState({
@@ -20,9 +21,22 @@ const Dashboard = () => {
       .get(`http://localhost:5000/api/tasks/stats`, {
         headers: { Authorization: `Bearer ${token}` }
       })
-      .then(res => setStats(res.data))
+      .then(res => setStats(res.data || {
+        total: 0,
+        completed: 0,
+        todo: 0,
+        inProgress: 0
+      }))
       .catch(err => console.log(err));
   }, [token]);
+
+  // ✅ FIXED: chartData moved inside component + safe values
+  const chartData = [
+    { name: "Total", value: stats.total || 0 },
+    { name: "Completed", value: stats.completed || 0 },
+    { name: "Todo", value: stats.todo || 0 },
+    { name: "In Progress", value: stats.inProgress || 0 }
+  ];
 
   return (
     <div className={`dash-layout ${dark ? "dark" : ""}`}>
@@ -82,9 +96,12 @@ const Dashboard = () => {
         {/* CHART SECTION */}
         <div className="chart-box">
           <h2>Progress Analytics</h2>
-          <div className="chart-placeholder">
-            📈 Chart will be added here
+
+          <div className="chart-section">
+            <h3>Task Overview</h3>
+            <StatsChart data={chartData} />
           </div>
+
         </div>
 
       </div>

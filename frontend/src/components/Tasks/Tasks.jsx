@@ -1,6 +1,7 @@
 import Sidebar from "../Navbar/Navbar";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { ThemeContext } from "../../context/ThemeContext.jsx";
 import "./Tasks.css";
 
 const Tasks = () => {
@@ -8,6 +9,7 @@ const Tasks = () => {
   const [loading, setLoading] = useState(false);
 
   const token = localStorage.getItem("token");
+  const { dark, toggle } = useContext(ThemeContext);
 
   const headers = {
     Authorization: `Bearer ${token}`,
@@ -62,13 +64,24 @@ const Tasks = () => {
   };
 
   return (
-    <div className="layout">
+    <div className={`dash-layout ${dark ? "dark" : ""}`}>
       <Sidebar />
 
       <div className="tasks-page">
 
-        <h2>All Tasks</h2>
+        {/* HEADER (same as dashboard style) */}
+        <div className="dash-header">
+          <div>
+            <h1>Tasks</h1>
+            <p>All assigned tasks overview</p>
+          </div>
 
+          <button className="theme-btn" onClick={toggle}>
+            {dark ? "Dark 🌙" : "Light ☀️"}
+          </button>
+        </div>
+
+        {/* TASK CONTENT */}
         {tasks.length === 0 ? (
           <div className="no-tasks">
             No tasks found for your projects
@@ -105,9 +118,7 @@ const Tasks = () => {
                     className="status-select"
                   >
                     <option value="todo">Todo</option>
-                    <option value="in-progress">
-                      In Progress
-                    </option>
+                    <option value="in-progress">In Progress</option>
                     <option value="done">Done</option>
                   </select>
                 </div>
