@@ -1,0 +1,116 @@
+.tasks-page {
+  padding: 20px;
+  min-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  background: #f9f9f9;
+}
+
+.tasks-page h2 {
+  margin-bottom: 20px;
+  color: #2d3436;
+  position: sticky;
+  top: 0;
+  background: #f9f9f9;
+  padding: 10px 0;
+  z-index: 10;
+}
+
+.no-tasks {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #636e72;
+  font-size: 16px;
+}
+
+/* SCROLL ONLY THIS AREA */
+.tasks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  max-height: calc(90vh - 120px);
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+/* Scrollbar styling */
+.tasks-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.tasks-list::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 10px;
+}
+
+.tasks-list::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
+.task-card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-left: 4px solid #3498db;
+}
+
+.task-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.task-info h4 {
+  margin: 0;
+  font-size: 16px;
+  color: #2d3436;
+}
+
+.project-name {
+  font-size: 12px;
+  background: #dfe6e9;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.status-todo {
+  background: #ffeaa7;
+  color: #d63031;
+}
+
+.status-in-progress {
+  background: #74b9ff;
+  color: #0984e3;
+}
+
+.status-done {
+  background: #55efc4;
+  color: #00b894;
+}
+
+.status-select {
+  padding: 8px 12px;
+  border-radius: 5px;
+  border: 1px solid #dfe6e9;
+  cursor: pointer;
+}
+
+.status-select:focus {
+  outline: none;
+  border-color: #3498db;
+}
