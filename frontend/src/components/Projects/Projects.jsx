@@ -1,9 +1,10 @@
 import Sidebar from "../Navbar/Navbar";
 import axios from "axios";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useContext } from "react";
 import { useSearchParams } from "react-router-dom";
 import "./Projects.css";
 import ProjectPieChart from "../charts/PieChart";
+import { ThemeContext } from "../../context/ThemeContext.jsx";
 
 const Projects = () => {
   const [projects, setProjects] = useState([]);
@@ -46,6 +47,8 @@ const token = localStorage.getItem("token");
       return [];
     }
   }, [token]);
+
+  const { dark, toggle } = useContext(ThemeContext);
 
   /* FETCH ALL USERS */
   const fetchAllUsers = async () => {
@@ -251,171 +254,212 @@ const token = localStorage.getItem("token");
       default: return "status-todo";
     }
   };
+return (
+  <div className={`layout ${dark ? "dark" : ""}`}>
+    <Sidebar />
 
-  return (
-    <div className="layout">
-      <Sidebar />
+    <div className="main projects-page">
 
-      <div className="main projects-page">
-        
+      {/* RIGHT SIDE - PROJECT DETAILS */}
+      <div className="project-details-panel">
+        {!selectedProject ? (
+          <div className="no-selection">
+            <h2>Select a Project</h2>
+            <p>Click on a project from the list to view details</p>
+          </div>
+        ) : (
+          <>
+            <div className="project-header-bar">
+  <div>
+    <h2>{selectedProject.title}</h2>
+    <p>{selectedProject.description}</p>
+  </div>
 
-        {/* RIGHT SIDE - PROJECT DETAILS */}
-        <div className="project-details-panel">
-          {!selectedProject ? (
-            <div className="no-selection">
-              <h2>Select a Project</h2>
-              <p>Click on a project from the list to view details</p>
-            </div>
-          ) : (
-            <>
-              <div className="project-header">
-                <div>
-                  <h2>{selectedProject.title}</h2>
-                  <p>{selectedProject.description}</p>
-                </div>
-              </div>
-
-              {/* ADMIN: Task & Member Management */}
-              {role === "admin" && (
-                <div className="admin-panel">
-                  <div className="admin-actions">
-                    <button
-                      className="btn btn-secondary"
-                      onClick={() => setShowCreateTask(!showCreateTask)}
-                    >
-                      {showCreateTask ? "Cancel" : "+ Create Task"}
-                    </button>
-                    <button
-                      className="btn btn-secondary"
-                      onClick={() => setShowAssignUser(!showAssignUser)}
-                    >
-                      {showAssignUser ? "Cancel" : "+ Assign User"}
-                    </button>
-                  </div>
-
-                  {/* PROJECT PROGRESS PIE CHART */}
-<div className="project-chart-box">
-  <h4>Project Progress</h4>
-  <ProjectPieChart data={chartData} />
+  <button className="theme-btn" onClick={toggle}>
+    {dark ? "Dark 🌙" : "Light ☀️"}
+  </button>
 </div>
 
-                  {/* CREATE TASK FORM */}
-                  {showCreateTask && (
-                    <div className="task-form card">
-                      <h4>Create New Task</h4>
-                      <form onSubmit={handleCreateTask}>
-                        <input
-                          type="text"
-                          placeholder="Task Title"
-                          className="input"
-                          value={newTask.title}
-                          onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
-                          required
-                        />
-                        <select
-                          className="input"
-                          value={newTask.assignedUserId}
-                          onChange={(e) => setNewTask({ ...newTask, assignedUserId: e.target.value })}
-                        >
-                          <option value="">Select Assignee (Optional)</option>
-                          {members.map(m => (
-                            <option key={m.id} value={m.id}>{m.name}</option>
-                          ))}
-                        </select>
-                        <button type="submit" className="btn btn-primary" disabled={loading}>
-                          Create Task
-                        </button>
-                      </form>
-                    </div>
-                  )}
+            {/* ADMIN PANEL */}
+{role === "admin" && (
+  <div className="admin-panel-grid">
 
-                  {/* ASSIGN USER FORM */}
-                  {showAssignUser && (
-                    <div className="assign-form card">
-                      <h4>Assign User to Project</h4>
-                      <select
-                        className="input"
-                        onChange={(e) => assignUser(e.target.value)}
-                      >
-                        <option value="">Select User</option>
-                        {allUsers
-                          .filter(u => !members.find(m => m.id === u.id))
-                          .map(u => (
-                            <option key={u.id} value={u.id}>{u.name}</option>
-                          ))}
-                      </select>
-                    </div>
-                  )}
+    {/* LEFT SIDE - ACTIONS */}
+    <div className="admin-left">
+      <div className="admin-actions">
+        <button
+          className="btn btn-secondary"
+          onClick={() => setShowCreateTask(!showCreateTask)}
+        >
+          {showCreateTask ? "Cancel" : "+ Create Task"}
+        </button>
 
-                  {/* REMOVE MEMBERS */}
-                  <div className="remove-members">
-                    <h4>Manage Members</h4>
-                    <div className="members-list">
-                      {members.map(m => (
-                        <div key={m.id} className="member-tag">
-                          <span>{m.name}</span>
-                          <button
-                            className="btn-remove"
-                            onClick={() => removeUser(m.id)}
-                          >
-                            ×
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
+        <button
+          className="btn btn-secondary"
+          onClick={() => setShowAssignUser(!showAssignUser)}
+        >
+          {showAssignUser ? "Cancel" : "+ Assign User"}
+        </button>
+      </div>
 
-              {/* TASKS SECTION */}
-              <div className="tasks-section">
-                <h3>Tasks ({tasks.length})</h3>
-                
-                {tasks.length === 0 ? (
-                  <p className="no-tasks">No tasks yet</p>
-                ) : (
-                  <div className="tasks-list">
-                    {tasks.map(t => (
-                      <div key={t.id} className="task-card">
-                        <div className="task-header">
-                          <h4>{t.title}</h4>
-                          <span className={`status ${getStatusClass(t.status)}`}>
-                            {t.status}
-                          </span>
-                        </div>
-                        
-                        {/* ASSIGNEE INFO */}
-                        {t.assignedUserId && (
-                          <p className="assignee">
-                            Assigned to: {members.find(m => m.id === t.assignedUserId)?.name || 'Unknown'}
-                          </p>
-                        )}
+      {/* CREATE TASK FORM */}
+      {showCreateTask && (
+        <div className="task-form card">
+          <h4>Create New Task</h4>
+          <form onSubmit={handleCreateTask}>
+            <input
+              type="text"
+              placeholder="Task Title"
+              className="input"
+              value={newTask.title}
+              onChange={(e) =>
+                setNewTask({ ...newTask, title: e.target.value })
+              }
+              required
+            />
 
-                        {/* STATUS UPDATE - Admin or Assigned User Only */}
-                        {(role === "admin" || t.assignedUserId === userId) && (
-                          <div className="task-actions">
-                            <select
-                              className="status-select"
-                              value={t.status}
-                              onChange={(e) => updateTaskStatus(t.id, e.target.value)}
-                            >
-                              <option value="todo">Todo</option>
-                              <option value="in-progress">In Progress</option>
-                              <option value="done">Done</option>
-                            </select>
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </>
-          )}
+            <select
+              className="input"
+              value={newTask.assignedUserId}
+              onChange={(e) =>
+                setNewTask({
+                  ...newTask,
+                  assignedUserId: e.target.value,
+                })
+              }
+            >
+              <option value="">Select Assignee (Optional)</option>
+              {members.map((m) => (
+                <option key={m.id} value={m.id}>
+                  {m.name}
+                </option>
+              ))}
+            </select>
+
+            <button
+              type="submit"
+              className="btn btn-primary"
+              disabled={loading}
+            >
+              Create Task
+            </button>
+          </form>
+        </div>
+      )}
+
+      {/* ASSIGN USER FORM */}
+      {showAssignUser && (
+        <div className="assign-form card">
+          <h4>Assign User to Project</h4>
+          <select
+            className="input"
+            onChange={(e) => assignUser(e.target.value)}
+          >
+            <option value="">Select User</option>
+            {allUsers
+              .filter((u) => !members.find((m) => m.id === u.id))
+              .map((u) => (
+                <option key={u.id} value={u.id}>
+                  {u.name}
+                </option>
+              ))}
+          </select>
+        </div>
+      )}
+    </div>
+
+    {/* RIGHT SIDE - MEMBERS */}
+    <div className="admin-right">
+      <div className="remove-members">
+        <h4>Manage Members</h4>
+
+        <div className="members-list">
+          {members.map((m) => (
+            <div key={m.id} className="member-tag">
+              <span>{m.name}</span>
+
+              <button
+                className="btn-remove"
+                onClick={() => removeUser(m.id)}
+              >
+                ×
+              </button>
+            </div>
+          ))}
         </div>
       </div>
     </div>
-  );
+
+  </div>
+)}
+
+            {/* GRID LAYOUT */}
+            <div className="project-content-grid">
+
+              {/* LEFT - TASKS */}
+              <div className="project-left">
+                <div className="tasks-section">
+                  <h3>Tasks ({tasks.length})</h3>
+
+                  {tasks.length === 0 ? (
+                    <p className="no-tasks">No tasks yet</p>
+                  ) : (
+                    <div className="tasks-list">
+                      {tasks.map((t) => (
+                        <div key={t.id} className="task-card">
+                          <div className="task-header">
+                            <h4>{t.title}</h4>
+                            <span className={`status ${getStatusClass(t.status)}`}>
+                              {t.status}
+                            </span>
+                          </div>
+
+                          {t.assignedUserId && (
+                            <p className="assignee">
+                              Assigned to:{" "}
+                              {members.find((m) => m.id === t.assignedUserId)?.name ||
+                                "Unknown"}
+                            </p>
+                          )}
+
+                          {(role === "admin" ||
+                            t.assignedUserId === userId) && (
+                            <div className="task-actions">
+                              <select
+                                className="status-select"
+                                value={t.status}
+                                onChange={(e) =>
+                                  updateTaskStatus(t.id, e.target.value)
+                                }
+                              >
+                                <option value="todo">Todo</option>
+                                <option value="in-progress">In Progress</option>
+                                <option value="done">Done</option>
+                              </select>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* RIGHT - PIE CHART */}
+              <div className="project-right">
+                <div className="project-chart-box">
+                  <h4>Project Progress</h4>
+                  <ProjectPieChart data={chartData} />
+                </div>
+              </div>
+
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  </div>
+);
 };
 
 export default Projects;
