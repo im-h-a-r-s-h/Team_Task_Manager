@@ -241,64 +241,7 @@ const token = localStorage.getItem("token");
       <Sidebar />
 
       <div className="main projects-page">
-        {/* LEFT SIDE - PROJECT LIST */}
-        <div className="project-list-sidebar">
-<div className="project-list-header">
-            <h2>Projects</h2>
-            {/* Create Project Button - Visible to All Users */}
-            <button
-              className="btn btn-primary"
-              onClick={() => setShowCreateForm(!showCreateForm)}
-            >
-              {showCreateForm ? "Cancel" : "+ New Project"}
-            </button>
-          </div>
-
-{/* Create Project Form - Visible to All Users */}
-          {showCreateForm && (
-            <div className="card create-form">
-              <h3>Create New Project</h3>
-              <form onSubmit={handleCreateProject}>
-                <input
-                  type="text"
-                  placeholder="Project Title"
-                  className="input"
-                  value={newProject.title}
-                  onChange={(e) => setNewProject({ ...newProject, title: e.target.value })}
-                  required
-                />
-                <textarea
-                  placeholder="Project Description"
-                  className="input"
-                  value={newProject.description}
-                  onChange={(e) => setNewProject({ ...newProject, description: e.target.value })}
-                  rows="3"
-                />
-                <button type="submit" className="btn btn-primary" disabled={loading}>
-                  {loading ? "Creating..." : "Create Project"}
-                </button>
-              </form>
-            </div>
-          )}
-
-          {/* PROJECT LIST */}
-          <div className="project-list-items">
-            {projects.length === 0 ? (
-              <p className="no-projects">No projects found</p>
-            ) : (
-              projects.map(p => (
-                <div
-                  key={p.id}
-                  className={`project-item ${selectedProject?.id === p.id ? 'active' : ''}`}
-                  onClick={() => selectProject(p)}
-                >
-                  <h4>{p.title}</h4>
-                  <p className="member-count">{p.Users?.length || 0} members</p>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
+        
 
         {/* RIGHT SIDE - PROJECT DETAILS */}
         <div className="project-details-panel">

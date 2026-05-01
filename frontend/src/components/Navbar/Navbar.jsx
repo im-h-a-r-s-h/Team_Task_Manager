@@ -5,15 +5,21 @@ import "./Navbar.css";
 
 const Sidebar = () => {
   const nav = useNavigate();
-  // Get role from localStorage - check both direct role and user object
+
   const directRole = localStorage.getItem("role");
   const userObj = JSON.parse(localStorage.getItem("user") || "{}");
   const role = directRole || userObj?.role || "member";
+
   const [projects, setProjects] = useState([]);
   const [showProjectsDropdown, setShowProjectsDropdown] = useState(false);
   const [showCreateProject, setShowCreateProject] = useState(false);
   const [newProject, setNewProject] = useState({ title: "", description: "" });
   const [loading, setLoading] = useState(false);
+
+  // ⭐ ACTIVE PROJECT STATE
+  const [activeProjectId, setActiveProjectId] = useState(
+    localStorage.getItem("activeProjectId")
+  );
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -36,9 +42,13 @@ const Sidebar = () => {
     nav("/");
   };
 
-const handleProjectClick = (projectId) => {
-    // Navigate to Projects page with project ID as query param to show inline
+  const handleProjectClick = (projectId) => {
     nav(`/projects?id=${projectId}`);
+    setActiveProjectId(projectId);
+
+    // ⭐ persist active project
+    localStorage.setItem("activeProjectId", projectId);
+
     setShowProjectsDropdown(false);
   };
 
@@ -52,10 +62,10 @@ const handleProjectClick = (projectId) => {
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      // Refresh projects list
       const response = await axios.get(`http://localhost:5000/api/projects`, {
         headers: { Authorization: `Bearer ${token}` }
       });
+
       setProjects(response.data);
 
       setNewProject({ title: "", description: "" });
@@ -71,39 +81,48 @@ const handleProjectClick = (projectId) => {
 
   return (
     <div className="sidebar">
-      <h3>TaskApp</h3>
+
+      <h3 className="logo">TaskApp</h3>
 
       <Link to="/dashboard">Dashboard</Link>
       <Link to="/tasks">Tasks</Link>
 
-      {/* Projects Dropdown */}
+      {/* PROJECTS */}
       <div className="dropdown">
         <button
           className="dropdown-btn"
           onClick={() => setShowProjectsDropdown(!showProjectsDropdown)}
         >
-          Projects {showProjectsDropdown ? '▲' : '▼'}
+          Projects {showProjectsDropdown ? "▲" : "▼"}
         </button>
+
         {showProjectsDropdown && (
           <div className="dropdown-content">
-            {projects.map(project => (
+
+            {projects.map((project) => (
               <div
                 key={project.id}
-                className="dropdown-item"
+                className={`dropdown-item ${
+                  Number(activeProjectId) === project.id ? "active" : ""
+                }`}
                 onClick={() => handleProjectClick(project.id)}
               >
-                {project.title}
+                <span>{project.title}</span>
+
+                {Number(activeProjectId) === project.id && (
+                  <span className="dot">●</span>
+                )}
               </div>
             ))}
 
-            {role === 'admin' && (
+            {/* CREATE PROJECT */}
+            {role === "admin" && (
               <>
                 <hr />
+
                 <div
                   className="dropdown-item create-project-btn"
-                  onClick={() => {
-                    setShowCreateProject(!showCreateProject);
-                  }}
+                  onClick={() => setShowCreateProject(!showCreateProject)}
                 >
                   + Add New Project
                 </div>
@@ -115,19 +134,32 @@ const handleProjectClick = (projectId) => {
                         type="text"
                         placeholder="Project Title"
                         value={newProject.title}
-                        onChange={(e) => setNewProject({...newProject, title: e.target.value})}
+                        onChange={(e) =>
+                          setNewProject({
+                            ...newProject,
+                            title: e.target.value
+                          })
+                        }
                         required
                       />
+
                       <textarea
                         placeholder="Description"
                         value={newProject.description}
-                        onChange={(e) => setNewProject({...newProject, description: e.target.value})}
+                        onChange={(e) =>
+                          setNewProject({
+                            ...newProject,
+                            description: e.target.value
+                          })
+                        }
                         rows="3"
                       />
+
                       <div className="form-buttons">
                         <button type="submit" disabled={loading}>
-                          {loading ? 'Creating...' : 'Create'}
+                          {loading ? "Creating..." : "Create"}
                         </button>
+
                         <button
                           type="button"
                           onClick={() => {
@@ -147,7 +179,9 @@ const handleProjectClick = (projectId) => {
         )}
       </div>
 
-      <button className="btn" onClick={logout}>Logout</button>
+      <button className="btn" onClick={logout}>
+        Logout
+      </button>
     </div>
   );
 };
