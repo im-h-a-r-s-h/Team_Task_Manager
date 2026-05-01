@@ -23,10 +23,11 @@ const Projects = () => {
 
 const token = localStorage.getItem("token");
   // Get role from localStorage - check both direct role and user object
-  const directRole = localStorage.getItem("role");
-  const userObj = JSON.parse(localStorage.getItem("user") || "{}");
-  const role = directRole || userObj?.role || "member";
+
+const userObj = JSON.parse(localStorage.getItem("user") || "{}");
   const userId = userObj?.id;
+  // User is project member if they are the creator OR in the members list
+  const isProjectMember = selectedProject?.createdBy === userId || members.some(m => m.id === userId);
   const [searchParams] = useSearchParams();
   const urlProjectId = searchParams.get("id");
 
@@ -180,28 +181,25 @@ const token = localStorage.getItem("token");
   };
 
   /* ASSIGN USER TO PROJECT */
-  const assignUser = async (userId) => {
-    if (!userId) return;
-    
-    try {
-      await axios.post(
-        `http://localhost:5000/api/projects/${selectedProject.id}/add-member`,
-        { userId },
-        { headers }
-      );
+ const assignUser = async (userId) => {
+  if (!userId) return;
 
-      // Refresh project to get updated members
-      const updatedProjects = await fetchProjects();
-      const updated = updatedProjects.find(p => p.id === selectedProject.id);
-      if (updated) {
-        setSelectedProject(updated);
-        setMembers(updated.Users || []);
-      }
-      setShowAssignUser(false);
-    } catch (err) {
-      console.error("Error assigning user:", err);
-    }
-  };
+  try {
+    const res = await axios.post(
+      `http://localhost:5000/api/projects/${selectedProject.id}/add-member`,
+      { userId },
+      { headers }
+    );
+
+    // ✅ FIX: use backend response directly
+    setSelectedProject(res.data);
+    setMembers(res.data.Users || []);
+    setShowAssignUser(false);
+
+  } catch (err) {
+    console.error("Error assigning user:", err);
+  }
+};
 
   /* REMOVE USER FROM PROJECT */
   const removeUser = async (userId) => {
@@ -280,8 +278,8 @@ return (
   </button>
 </div>
 
-            {/* ADMIN PANEL */}
-{role === "admin" && (
+{/* ADMIN PANEL */}
+{isProjectMember && (
   <div className="admin-panel-grid">
 
     {/* LEFT SIDE - ACTIONS */}
@@ -422,8 +420,7 @@ return (
                             </p>
                           )}
 
-                          {(role === "admin" ||
-                            t.assignedUserId === userId) && (
+{(isProjectMember || t.assignedUserId === userId) && (
                             <div className="task-actions">
                               <select
                                 className="status-select"

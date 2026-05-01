@@ -1,15 +1,31 @@
 import axios from "axios";
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Signup from "../Signup/Signup";
 
-const Login = ({ onSuccess }) => {
-  const [data, setData] = useState({});
+const Login = ({ onSuccess, prefill }) => {
+
+  // ✅ INITIAL STATE
+  const [data, setData] = useState({
+    email: "",
+    password: ""
+  });
+
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
 
   const nav = useNavigate();
+
+  // ✅ FIX: UPDATE STATE WHEN PREFILL CHANGES
+  useEffect(() => {
+    if (prefill) {
+      setData({
+        email: prefill.email || "",
+        password: prefill.password || ""
+      });
+    }
+  }, [prefill]);
 
   const handle = async () => {
     setLoading(true);
@@ -44,23 +60,28 @@ const Login = ({ onSuccess }) => {
 
         {error && <div className="toast">{error}</div>}
 
+        {/* EMAIL */}
         <input
           className="input"
           placeholder="Email"
+          value={data.email}
           onChange={(e) =>
             setData({ ...data, email: e.target.value })
           }
         />
 
+        {/* PASSWORD */}
         <input
           className="input"
           type="password"
           placeholder="Password"
+          value={data.password}
           onChange={(e) =>
             setData({ ...data, password: e.target.value })
           }
         />
 
+        {/* BUTTON */}
         {loading ? (
           <div className="loader"></div>
         ) : (
@@ -69,7 +90,7 @@ const Login = ({ onSuccess }) => {
           </button>
         )}
 
-        {/* SIGNUP LINK */}
+        {/* SWITCH TO SIGNUP */}
         <p>
           New user?{" "}
           <span

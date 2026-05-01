@@ -6,9 +6,7 @@ import "./Navbar.css";
 const Sidebar = () => {
   const nav = useNavigate();
 
-  const directRole = localStorage.getItem("role");
   const userObj = JSON.parse(localStorage.getItem("user") || "{}");
-  const role = directRole || userObj?.role || "member";
 
   const [projects, setProjects] = useState([]);
   const [showProjectsDropdown, setShowProjectsDropdown] = useState(false);
@@ -70,7 +68,6 @@ const Sidebar = () => {
 
       setNewProject({ title: "", description: "" });
       setShowCreateProject(false);
-      alert("Project created successfully!");
     } catch (error) {
       console.error("Error creating project:", error);
       alert("Failed to create project");
@@ -116,7 +113,6 @@ const Sidebar = () => {
             ))}
 
             {/* CREATE PROJECT */}
-            {role === "admin" && (
               <>
                 <hr />
 
@@ -174,7 +170,6 @@ const Sidebar = () => {
                   </div>
                 )}
               </>
-            )}
           </div>
         )}
       </div>

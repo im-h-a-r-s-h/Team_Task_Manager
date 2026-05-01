@@ -24,12 +24,12 @@ export default function ProjectDetails() {
     assignedUserId: ""
   });
 
-const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const userObj = JSON.parse(localStorage.getItem("user") || "{}");
-  const directRole = localStorage.getItem("role");
-  const role = directRole || userObj?.role || "member";
   const userId = userObj?.id;
+  // User is project member if they are the creator OR in the members list
+  const isProjectMember = selected?.createdBy === userId || members.some(m => m.id === userId);
   const token = localStorage.getItem("token");
 
   const { id: projectId } = useParams();
@@ -214,12 +214,13 @@ const [loading, setLoading] = useState(false);
               <h2>{selected.title}</h2>
               <p>{selected.description}</p>
 
-{/* Create Project - Visible to All Users */}
-              <div className="admin-panel">
+              {/* ADMIN PANEL - Visible to all project members */}
+              {isProjectMember && (
+                <div className="admin-panel">
 
-                <button onClick={() => setShowCreateProject(!showCreateProject)}>
-                  Create Project
-                </button>
+                  <button onClick={() => setShowCreateProject(!showCreateProject)}>
+                    Create Project
+                  </button>
 
                   <button onClick={() => setShowCreateTask(!showCreateTask)}>
                     Create Task
@@ -334,7 +335,7 @@ const [loading, setLoading] = useState(false);
                   <div key={t.id}>
                     <b>{t.title}</b> - {t.status}
 
-                    {(role === "admin" ||
+                    {(isProjectMember ||
                       t.assignedUserId === userId) && (
                       <select
                         value={t.status}

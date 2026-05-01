@@ -1,13 +1,11 @@
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Login from "../Login/Login";
 
 const Signup = ({ onSuccess }) => {
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [showLogin, setShowLogin] = useState(false);
 
   const nav = useNavigate();
 
@@ -17,16 +15,31 @@ const Signup = ({ onSuccess }) => {
     setError("");
 
     try {
+      // ✅ STEP 1: SIGNUP
       await axios.post(
         "http://localhost:5000/api/auth/signup",
         data
       );
 
-      alert("Signup successful! Please login.");
+      // ✅ STEP 2: AUTO LOGIN
+      const res = await axios.post(
+        "http://localhost:5000/api/auth/login",
+        {
+          email: data.email,
+          password: data.password
+        }
+      );
+
+      // ✅ STEP 3: STORE AUTH DATA
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+      localStorage.setItem("role", res.data.user.role);
+
+      // ✅ STEP 4: REDIRECT
+      nav("/dashboard");
 
       if (onSuccess) onSuccess();
 
-      nav("/login");
     } catch (err) {
       setError(err.response?.data?.msg || "Signup failed");
     } finally {
@@ -36,8 +49,6 @@ const Signup = ({ onSuccess }) => {
 
   return (
     <div className="main">
-
-      {/* SIGNUP FORM */}
       <div className="signup-box">
         <h2>Signup</h2>
 
@@ -82,35 +93,7 @@ const Signup = ({ onSuccess }) => {
             {loading ? "Signing up..." : "Signup"}
           </button>
         </form>
-
-        {/* SWITCH TO LOGIN */}
-        <p>
-          Already have an account?{" "}
-          <span
-            style={{ color: "#3498db", cursor: "pointer" }}
-            onClick={() => setShowLogin(true)}
-          >
-            Login
-          </span>
-        </p>
       </div>
-
-      {/* LOGIN MODAL */}
-      {showLogin && (
-        <div className="modal">
-          <div className="modal-box">
-            <span
-              className="close"
-              onClick={() => setShowLogin(false)}
-            >
-              ×
-            </span>
-
-            <Login onSuccess={() => setShowLogin(false)} />
-          </div>
-        </div>
-      )}
-
     </div>
   );
 };
