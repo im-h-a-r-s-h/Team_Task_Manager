@@ -17,6 +17,14 @@
   align-items: center;
 }
 
+.mobile-navbar {
+  display: none; /* ❌ hidden on desktop */
+}
+
+.mobile-nav-overlay {
+  display: none;
+}
+
 /* active dot */
 .dot {
   color: #3b82f6;
@@ -82,6 +90,8 @@
   color: white;
 }
 
+
+
 @media (max-width: 1024px) {
   .dropdown-content {
     position: static;
@@ -89,7 +99,7 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 1023px) {
   .dropdown-btn {
     font-size: 14px;
   }
@@ -176,3 +186,5 @@
     z-index: 1000;
   }
 }
+
+
