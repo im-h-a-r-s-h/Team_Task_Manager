@@ -3,6 +3,7 @@ import axios from "axios";
 import { useEffect, useState, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import "./Projects.css";
+import ProjectPieChart from "../charts/PieChart";
 
 const Projects = () => {
   const [projects, setProjects] = useState([]);
@@ -57,6 +58,21 @@ const token = localStorage.getItem("token");
       console.error("Error fetching users:", error);
     }
   };
+
+  const chartData = [
+  {
+    name: "Todo",
+    value: tasks.filter(t => t.status === "todo").length
+  },
+  {
+    name: "In Progress",
+    value: tasks.filter(t => t.status === "in-progress").length
+  },
+  {
+    name: "Done",
+    value: tasks.filter(t => t.status === "done").length
+  }
+];
 
 /* INITIAL LOAD - Load projects and users on mount (no id in URL) */
   useEffect(() => {
@@ -276,6 +292,12 @@ const token = localStorage.getItem("token");
                       {showAssignUser ? "Cancel" : "+ Assign User"}
                     </button>
                   </div>
+
+                  {/* PROJECT PROGRESS PIE CHART */}
+<div className="project-chart-box">
+  <h4>Project Progress</h4>
+  <ProjectPieChart data={chartData} />
+</div>
 
                   {/* CREATE TASK FORM */}
                   {showCreateTask && (
