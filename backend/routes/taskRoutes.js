@@ -84,15 +84,47 @@ router.put('/:id', auth, async (req, res) => {
 
 // DASHBOARD STATS (FIX 404 ERROR)
 router.get('/stats', auth, async (req, res) => {
-  const total = await Task.count();
-  const completed = await Task.count({ where: { status: 'done' } });
-  const todo = await Task.count({ where: { status: 'todo' } });
+  try {
+    const user = await User.findByPk(req.user.id);
+    const userProjects = await user.getProjects();
+    const projectIds = userProjects.map(p => p.id);
 
-  res.json({
-    total,
-    completed,
-    todo
-  });
+    const total = await Task.count({
+      where: { projectId: projectIds }
+    });
+
+    const completed = await Task.count({
+      where: {
+        projectId: projectIds,
+        status: 'done'
+      }
+    });
+
+    const todo = await Task.count({
+      where: {
+        projectId: projectIds,
+        status: 'todo'
+      }
+    });
+
+    const inProgress = await Task.count({
+      where: {
+        projectId: projectIds,
+        status: 'in-progress'
+      }
+    });
+
+    res.json({
+      total,
+      completed,
+      todo,
+      inProgress
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: "Error fetching stats" });
+  }
 });
 
 module.exports = router;
