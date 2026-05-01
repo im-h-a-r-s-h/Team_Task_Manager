@@ -152,3 +152,43 @@
 .dark-bg .chart-section {
   background: #111827;
 }
+
+@media (max-width: 1024px) {
+  .dash-layout {
+    flex-direction: column;
+  }
+
+  .dash-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .dash-main {
+    padding: 16px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .chart-box,
+  .chart-section {
+    padding: 16px;
+  }
+
+  .chart-placeholder {
+    height: 220px;
+  }
+}

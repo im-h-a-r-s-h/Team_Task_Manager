@@ -87,3 +87,34 @@
   from { transform: scale(0.9); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
 }
+
+.home-card {
+  max-width: 100%;
+}
+
+@media (max-width: 1024px) {
+  .home-card {
+    width: 100%;
+    max-width: 720px;
+    padding: 32px;
+  }
+
+  .home-buttons {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-card {
+    width: 90%;
+    padding: 24px;
+  }
+
+  .home-buttons {
+    gap: 12px;
+  }
+
+  .modal-box {
+    width: min(340px, 90%);
+  }
+}

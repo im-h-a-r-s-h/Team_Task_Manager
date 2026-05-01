@@ -27,3 +27,43 @@
 .btn-secondary:hover {
   background: #229954;
 }
+
+@media (max-width: 1024px) {
+  .project-container {
+    flex-direction: column;
+  }
+
+  .project-list {
+    width: 100%;
+  }
+
+  .project-main {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .project-main {
+    padding: 12px;
+  }
+
+  .project-item {
+    font-size: 14px;
+  }
+
+  .task-card {
+    padding: 12px;
+  }
+
+  .task-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .admin-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+}

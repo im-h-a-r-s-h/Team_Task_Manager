@@ -6,13 +6,15 @@ import "./Navbar.css";
 const Sidebar = () => {
   const nav = useNavigate();
 
-  const userObj = JSON.parse(localStorage.getItem("user") || "{}");
-
   const [projects, setProjects] = useState([]);
   const [showProjectsDropdown, setShowProjectsDropdown] = useState(false);
   const [showCreateProject, setShowCreateProject] = useState(false);
   const [newProject, setNewProject] = useState({ title: "", description: "" });
   const [loading, setLoading] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const toggleMobileMenu = () => setMobileMenuOpen((prev) => !prev);
+  const closeMobileMenu = () => setMobileMenuOpen(false);
 
   // ⭐ ACTIVE PROJECT STATE
   const [activeProjectId, setActiveProjectId] = useState(
@@ -38,6 +40,7 @@ const Sidebar = () => {
   const logout = () => {
     localStorage.clear();
     nav("/");
+    closeMobileMenu();
   };
 
   const handleProjectClick = (projectId) => {
@@ -48,6 +51,7 @@ const Sidebar = () => {
     localStorage.setItem("activeProjectId", projectId);
 
     setShowProjectsDropdown(false);
+    closeMobileMenu();
   };
 
   const handleCreateProject = async (e) => {
@@ -77,12 +81,26 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="sidebar">
+    <>
+      <div className="mobile-navbar">
+        <button
+          className="mobile-menu-button"
+          onClick={toggleMobileMenu}
+          aria-label="Toggle navigation"
+        >
+          {mobileMenuOpen ? "✕" : "☰"}
+        </button>
+        <h3 className="logo">TaskApp</h3>
+      </div>
 
-      <h3 className="logo">TaskApp</h3>
+      {mobileMenuOpen && <div className="mobile-nav-overlay" onClick={closeMobileMenu} />}
 
-      <Link to="/dashboard">Dashboard</Link>
-      <Link to="/tasks">Tasks</Link>
+      <div className={`sidebar ${mobileMenuOpen ? "open" : ""}`}>
+
+        <h3 className="logo">TaskApp</h3>
+
+      <Link to="/dashboard" onClick={closeMobileMenu}>Dashboard</Link>
+      <Link to="/tasks" onClick={closeMobileMenu}>Tasks</Link>
 
       {/* PROJECTS */}
       <div className="dropdown">
@@ -178,6 +196,7 @@ const Sidebar = () => {
         Logout
       </button>
     </div>
+    </>
   );
 };
 
