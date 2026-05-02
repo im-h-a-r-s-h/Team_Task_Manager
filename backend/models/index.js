@@ -4,6 +4,7 @@ const Project = require("./Project");
 const Task = require("./Task");
 const Team = require("./Team");
 
+// associations
 User.belongsToMany(Project, { through: Team });
 Project.belongsToMany(User, { through: Team });
 
@@ -13,5 +14,11 @@ Task.belongsTo(Project, { foreignKey: 'projectId' });
 User.hasMany(Task, { foreignKey: 'assignedUserId' });
 Task.belongsTo(User, { as: 'assignedUser', foreignKey: 'assignedUserId' });
 
-// IMPORTANT: export only models
-module.exports = { User, Project, Task, Team };
+// ✅ IMPORTANT FIX
+module.exports = {
+  sequelize,
+  User,
+  Project,
+  Task,
+  Team
+};
