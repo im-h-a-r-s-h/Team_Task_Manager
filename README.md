@@ -7,11 +7,11 @@ It provides user authentication, project creation, member management, task assig
 ## Project Screenshots
 
 Dashboard Page
-![Task 1](./screenshots/Screenshot 2026-05-02 174022.png)
+![Dashboard](./screenshots/dashboard.png)
 Task Page
-![task 2](./screenshots/Screenshot 2026-05-02 174051.png)
+![Tasks](./screenshots/tasks.png)
 Project Page
-![Task Screenshot 4](./screenshots/Screenshot 2026-05-02 174141.png)
+![Projects](./screenshots/projects.png)
 
 ## Project Live Demo
 
