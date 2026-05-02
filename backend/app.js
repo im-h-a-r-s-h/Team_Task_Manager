@@ -1,7 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
-const { sequelize } = require("./models");
+
+const sequelize = require("./models");
 
 const app = express();
 
@@ -16,18 +17,16 @@ app.use("/api/users", require("./routes/userRoutes"));
 
 const PORT = process.env.PORT || 5000;
 
-// DB + SERVER START
 const startServer = async () => {
   try {
     await sequelize.authenticate();
     console.log("Database connected successfully");
 
-    await sequelize.sync(); // safe for your project (MVP stage)
+    await sequelize.sync();
 
     app.listen(PORT, () => {
       console.log("Server running on port", PORT);
     });
-
   } catch (err) {
     console.error("Database connection failed:", err);
     process.exit(1);
