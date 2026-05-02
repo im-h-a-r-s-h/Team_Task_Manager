@@ -6,7 +6,11 @@ const { sequelize } = require("./models");
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: "https://your-frontend.up.railway.app",
+  credentials: true
+}));
+
 app.use(express.json());
 
 // Routes
