@@ -7,7 +7,7 @@ const { sequelize } = require("./models");
 const app = express();
 
 app.use(cors({
-  origin: "https://steadfast-success-production-d59b.up.railway.app/",
+  origin: "https://steadfast-success-production-d59b.up.railway.app",
   credentials: true
 }));
 
