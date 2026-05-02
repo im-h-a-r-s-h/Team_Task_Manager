@@ -38,7 +38,7 @@ const userObj = JSON.parse(localStorage.getItem("user") || "{}");
   /* FETCH PROJECTS */
   const fetchProjects = useCallback(async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/projects", {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/projects`, {
         headers
       });
       setProjects(response.data);
@@ -54,7 +54,7 @@ const userObj = JSON.parse(localStorage.getItem("user") || "{}");
   /* FETCH ALL USERS */
   const fetchAllUsers = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/users", {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/users`, {
         headers
       });
       setAllUsers(response.data);
@@ -114,7 +114,7 @@ const userObj = JSON.parse(localStorage.getItem("user") || "{}");
 
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/tasks/project/${project.id}`,
+        `${import.meta.env.VITE_API_URL}/api/tasks/project/${project.id}`,
         { headers }
       );
       setTasks(Array.isArray(res.data) ? res.data : []);
@@ -130,7 +130,7 @@ const userObj = JSON.parse(localStorage.getItem("user") || "{}");
     setLoading(true);
 
     try {
-      await axios.post("http://localhost:5000/api/projects", newProject, {
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/projects`, newProject, {
         headers
       });
 
@@ -156,7 +156,7 @@ const userObj = JSON.parse(localStorage.getItem("user") || "{}");
 
     try {
       await axios.post(
-        "http://localhost:5000/api/tasks",
+        `${import.meta.env.VITE_API_URL}/api/tasks`,
         {
           ...newTask,
           projectId: selectedProject.id
@@ -169,7 +169,7 @@ const userObj = JSON.parse(localStorage.getItem("user") || "{}");
       
       // Refresh tasks
       const res = await axios.get(
-        `http://localhost:5000/api/tasks/project/${selectedProject.id}`,
+        `${import.meta.env.VITE_API_URL}/api/tasks/project/${selectedProject.id}`,
         { headers }
       );
       setTasks(Array.isArray(res.data) ? res.data : []);
@@ -186,7 +186,7 @@ const userObj = JSON.parse(localStorage.getItem("user") || "{}");
 
   try {
     const res = await axios.post(
-      `http://localhost:5000/api/projects/${selectedProject.id}/add-member`,
+      `${import.meta.env.VITE_API_URL}/api/projects/${selectedProject.id}/add-member`,
       { userId },
       { headers }
     );
@@ -207,7 +207,7 @@ const userObj = JSON.parse(localStorage.getItem("user") || "{}");
     
     try {
       await axios.post(
-        `http://localhost:5000/api/projects/${selectedProject.id}/remove-member`,
+        `${import.meta.env.VITE_API_URL}/api/projects/${selectedProject.id}/remove-member`,
         { userId },
         { headers }
       );
@@ -228,7 +228,7 @@ const userObj = JSON.parse(localStorage.getItem("user") || "{}");
   const updateTaskStatus = async (taskId, status) => {
     try {
       await axios.put(
-        `http://localhost:5000/api/tasks/${taskId}`,
+        `${import.meta.env.VITE_API_URL}/api/tasks/${taskId}`,
         { status },
         { headers }
       );

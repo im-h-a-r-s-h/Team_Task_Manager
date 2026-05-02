@@ -25,7 +25,7 @@ const Sidebar = () => {
     const fetchProjects = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get(`http://localhost:5000/api/projects`, {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/projects`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setProjects(response.data);
@@ -60,11 +60,11 @@ const Sidebar = () => {
 
     try {
       const token = localStorage.getItem("token");
-      await axios.post(`http://localhost:5000/api/projects`, newProject, {
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/projects`, newProject, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      const response = await axios.get(`http://localhost:5000/api/projects`, {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/projects`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 

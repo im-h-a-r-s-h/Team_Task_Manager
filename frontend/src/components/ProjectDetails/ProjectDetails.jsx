@@ -40,7 +40,7 @@ export default function ProjectDetails() {
 
   /* FETCH PROJECTS */
   const fetchProjects = async () => {
-    const res = await axios.get("http://localhost:5000/api/projects", {
+    const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/projects`, {
       headers
     });
     return res.data;
@@ -52,7 +52,7 @@ export default function ProjectDetails() {
       try {
         const [projectsRes, usersRes] = await Promise.all([
           fetchProjects(),
-          axios.get("http://localhost:5000/api/users", { headers })
+          axios.get(`${import.meta.env.VITE_API_URL}/api/users`, { headers })
         ]);
 
         setProjects(projectsRes);
@@ -79,7 +79,7 @@ export default function ProjectDetails() {
 
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/tasks/project/${p.id}`,
+        `${import.meta.env.VITE_API_URL}/api/tasks/project/${p.id}`,
         { headers }
       );
 
@@ -102,7 +102,7 @@ export default function ProjectDetails() {
   /* ADD MEMBER */
   const addMember = async (id) => {
     await axios.post(
-      `http://localhost:5000/api/projects/${selected.id}/add-member`,
+      `${import.meta.env.VITE_API_URL}/api/projects/${selected.id}/add-member`,
       { userId: id },
       { headers }
     );
@@ -113,7 +113,7 @@ export default function ProjectDetails() {
   /* REMOVE MEMBER */
   const removeMember = async (id) => {
     await axios.post(
-      `http://localhost:5000/api/projects/${selected.id}/remove-member`,
+      `${import.meta.env.VITE_API_URL}/api/projects/${selected.id}/remove-member`,
       { userId: id },
       { headers }
     );
@@ -128,7 +128,7 @@ export default function ProjectDetails() {
 
     try {
       await axios.post(
-        "http://localhost:5000/api/projects",
+        `${import.meta.env.VITE_API_URL}/api/projects`,
         newProjectData,
         { headers }
       );
@@ -150,7 +150,7 @@ export default function ProjectDetails() {
 
     try {
       await axios.post(
-        "http://localhost:5000/api/tasks",
+        `${import.meta.env.VITE_API_URL}/api/tasks`,
         {
           ...newTask,
           projectId: selected.id
@@ -171,7 +171,7 @@ export default function ProjectDetails() {
   /* UPDATE TASK */
   const updateTaskStatus = async (taskId, status) => {
     await axios.put(
-      `http://localhost:5000/api/tasks/${taskId}`,
+      `${import.meta.env.VITE_API_URL}/api/tasks/${taskId}`,
       { status },
       { headers }
     );

@@ -21,7 +21,7 @@ const Tasks = () => {
 
   const fetchTasks = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/tasks/my", {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/tasks/my`, {
   headers,
 });
 
@@ -35,7 +35,7 @@ const Tasks = () => {
     setLoading(true);
     try {
       await axios.put(
-        `http://localhost:5000/api/tasks/${id}`,
+        `${import.meta.env.VITE_API_URL}/api/tasks/${id}`,
         { status },
         { headers }
       );

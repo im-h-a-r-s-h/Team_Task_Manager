@@ -18,7 +18,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/api/tasks/stats`, {
+      .get(`${import.meta.env.VITE_API_URL}/api/tasks/stats`, {
         headers: { Authorization: `Bearer ${token}` }
       })
       .then(res => setStats(res.data || {
