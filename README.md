@@ -7,11 +7,11 @@ It provides user authentication, project creation, member management, task assig
 ## Project Screenshots
 
 Dashboard Page
-![Task 1](C:\Users\HP\OneDrive\Desktop\team-task-manager\frontend\public\Screenshot 2026-05-02 174022.png)
+![Task 1](./screenshots/Screenshot 2026-05-02 174022.png)
 Task Page
-![task 2](C:\Users\HP\OneDrive\Desktop\team-task-manager\frontend\public\Screenshot 2026-05-02 174051.png)
+![task 2](./screenshots/Screenshot 2026-05-02 174051.png)
 Project Page
-![Task Screenshot 4](C:\Users\HP\OneDrive\Desktop\team-task-manager\frontend\public\Screenshot 2026-05-02 174141.png)
+![Task Screenshot 4](./screenshots/Screenshot 2026-05-02 174141.png)
 
 ## Project Live Demo
 
