@@ -1,6 +1,19 @@
 const { Sequelize } = require("sequelize");
+require("dotenv").config();
 
-module.exports = new Sequelize(process.env.DATABASE_URL, {
-  dialect: "mysql",
-  logging: false
-});
+const sequelize = new Sequelize(
+  process.env.MYSQLDATABASE,
+  process.env.MYSQLUSER,
+  process.env.MYSQLPASSWORD,
+  {
+    host: process.env.MYSQLHOST,
+    port: process.env.MYSQLPORT || 3306,
+    dialect: "mysql",
+    logging: false,
+    dialectOptions: {
+      connectTimeout: 60000,
+    },
+  }
+);
+
+module.exports = sequelize;
