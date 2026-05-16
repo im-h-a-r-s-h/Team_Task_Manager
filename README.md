@@ -48,7 +48,7 @@ Check out the live project: [Task Manager](https://steadfast-success-production-
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/team-task-manager.git
+git clone [https://github.com/your-username/team-task-manager.git](https://github.com/im-h-a-r-s-h/Team_Task_Manager
 cd team-task-manager
 ```
 
